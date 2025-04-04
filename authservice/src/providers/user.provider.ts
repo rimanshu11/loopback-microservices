@@ -8,12 +8,8 @@ export class BearerTokenVerifyProvider
 {
   constructor(  ) {}
 
-  value(): VerifyFunction.BearerFn {
-    console.log('log in provider');
-    
-    return async token => {
-        console.log("Token from provider",token);
-        
+  value(): VerifyFunction.BearerFn {    
+    return async token => {        
       const user = verify(token, 'your-jwt-secret', {
         issuer: process.env.JWT_ISSUER,
       }) as User;

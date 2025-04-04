@@ -127,9 +127,7 @@ export class GatewayController {
   async getBooks(): Promise<any> {
     try {
       const booksResponse = await axios.get(`${process.env.BASE_URL_BOOKS}`);
-      const books = booksResponse.data;
-      // console.log("Books:",books);
-            
+      const books = booksResponse.data;            
       const enrichedBooks = await Promise.all(
         books.map(async (book: any) => {
           try {
@@ -140,7 +138,6 @@ export class GatewayController {
             return { ...book, author, category };
           } catch (error) {
             console.log("Error:",error);
-            
             throw new HttpErrors.InternalServerError(
               `Failed to enrich books: ${error.message}`
             );
@@ -158,9 +155,7 @@ export class GatewayController {
   @authorize({permissions: ['POST_BOOK']})
   @post('/books')
   async postBooks(@requestBody() bookData: any): Promise<any> {
-    try {
-      console.log("BookData:",bookData);
-      
+    try {      
       validateBookPost(bookData);
 
       const author = await this.getAuthorByName(bookData.authorName);

@@ -10,9 +10,7 @@ export class BearerTokenVerifyProvider
 
   value(): VerifyFunction.BearerFn {    
     return async token => {        
-      const user = verify(token, process.env.JWT_SECRET as string) as any;      
-      console.log("User:",user);
-      
+      const user = verify(token, process.env.JWT_SECRET as string) as any;            
       return user;
     };
   }

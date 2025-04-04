@@ -23,7 +23,6 @@ export class MySequence implements SequenceHandler {
         const args = await this.parseParams(request, route);
         request.body = args[args.length - 1];
         const authUser: User = await this.authenticateRequest(request);
-        // console.log(authUser);
         // if(!authUser){
         //     throw new HttpErrors[401]
         // }

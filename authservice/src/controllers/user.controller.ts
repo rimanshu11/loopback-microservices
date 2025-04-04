@@ -217,7 +217,7 @@ async jwtSignup(
   async find(
     @param.filter(User) filter?: Filter<User>,
   ): Promise<User[]> {
-    console.log("List User:", filter);
+    // console.log("List User:", filter);
     
     return this.userRepository.find(filter);
   }
