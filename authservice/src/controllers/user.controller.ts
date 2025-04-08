@@ -122,9 +122,9 @@ async jwtSignup(
     @requestBody() credentials: {email: string; password: string},
   ): Promise<{}> {
     const user = await this.userRepository.findOne({
-      where: {email: credentials.email},
+      where: {email: credentials?.email},
     });
-    if (!user || !user.password) {
+    if (!user?.password) {
       throw new Error('Invalid credentials');
     }
 

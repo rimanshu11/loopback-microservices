@@ -1,8 +1,7 @@
-import {FindRoute, HttpErrors, InvokeMethod, MiddlewareSequence, ParseParams, Reject, RequestContext, Send, SequenceActions, SequenceHandler} from '@loopback/rest';
+import {FindRoute, InvokeMethod, ParseParams, Reject, RequestContext, Send, SequenceActions, SequenceHandler} from '@loopback/rest';
 import { User } from './models';
 import { inject } from '@loopback/core';
 import { AuthenticationBindings, AuthenticateFn } from 'loopback4-authentication';
-import { error } from 'console';
 
 export class MySequence implements SequenceHandler {
     constructor(
@@ -22,7 +21,7 @@ export class MySequence implements SequenceHandler {
         const route = this.findRoute(request);
         const args = await this.parseParams(request, route);
         request.body = args[args.length - 1];
-        const authUser: User = await this.authenticateRequest(request);
+        await this.authenticateRequest(request);
         // console.log(authUser);
         // if(!authUser){
         //     throw new HttpErrors[401]
