@@ -32,7 +32,7 @@
     "preopenapi-spec": "npm run build",
     "openapi-spec": "node ./dist/openapi-spec",
     "prestart": "npm run rebuild",
-    "start": "node -r source-map-support/register .",
+    "start": "node -r newrelic dist/index.js",
     "clean": "lb-clean dist *.tsbuildinfo .eslintcache",
     "rebuild": "npm run clean && npm run build"
   },
@@ -49,20 +49,27 @@
     "!*/__tests__"
   ],
   "dependencies": {
+    "@loopback/authentication-jwt": "^0.15.12",
+    "@loopback/authorization": "^0.15.12",
     "@loopback/boot": "^7.0.11",
-    "@loopback/core": "^6.1.8",
+    "@loopback/core": "^6.1.9",
     "@loopback/repository": "^7.0.11",
-    "@loopback/rest": "^14.0.11",
+    "@loopback/rest": "^14.0.12",
     "@loopback/rest-explorer": "^7.0.11",
     "@loopback/service-proxy": "^7.0.11",
     "axios": "^1.8.4",
     "dotenv": "^16.4.7",
+    "jsonwebtoken": "^9.0.2",
+    "loopback4-authentication": "^12.2.0",
+    "loopback4-authorization": "^7.0.3",
+    "newrelic": "^12.16.1",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@loopback/build": "^11.0.10",
     "@loopback/eslint-config": "^15.0.5",
     "@loopback/testlab": "^7.0.10",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^16.18.126",
     "eslint": "^8.57.1",
     "source-map-support": "^0.5.21",

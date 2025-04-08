@@ -10,6 +10,9 @@ import {
 } from '../validation/validation';
 import {HttpErrors} from '@loopback/rest';
 import dotenv from 'dotenv';
+import { authenticate, STRATEGY, Strategy } from 'loopback4-authentication';
+import { authorize } from 'loopback4-authorization';
+import { Validation } from '../validation/user.validation';
 
 dotenv.config();
 
@@ -47,6 +50,8 @@ export class GatewayController {
   }
 
   // Author Endpoints
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_AUTHOR']})
   @get('/authors')
   async getAuthors(): Promise<any> {
     try {
@@ -57,6 +62,8 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['POST_AUTHOR']})
   @post('/authors')
   async postAuthors(@requestBody() authorData: any): Promise<any> {
     try {
@@ -69,6 +76,8 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['PATCH_AUTHOR']})
   @patch('/authors/{id}')
   async updateAuthor(
     @param.path.string('id') id: string,
@@ -84,6 +93,8 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['DELETE_AUTHOR']})
   @del('/authors/{id}')
   async deleteAuthor(@param.path.number('id') id: number): Promise<any> {
     try {
@@ -94,6 +105,8 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_AUTHOR_BY_ID']})
   @get('/authors/{id}')
   async getAuthorById(@param.path.string('id') id: string): Promise<any> {
     try {
@@ -108,16 +121,15 @@ export class GatewayController {
   }
 
   // Book Endpoints
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_BOOK']})
   @get('/books')
   async getBooks(): Promise<any> {
     try {
       const booksResponse = await axios.get(`${process.env.BASE_URL_BOOKS}`);
-      const books = booksResponse.data;
-      // console.log("Books:",books);
-            
+      const books = booksResponse.data;            
       const enrichedBooks = await Promise.all(
         books.map(async (book: any) => {
-          console.log("Book:",book);
           try {
             const author = await axios.get(`${process.env.BASE_URL_AUTHORS}/${book.authorId}`).then(res => res.data);
             const category = book.categoryId
@@ -126,7 +138,6 @@ export class GatewayController {
             return { ...book, author, category };
           } catch (error) {
             console.log("Error:",error);
-            
             throw new HttpErrors.InternalServerError(
               `Failed to enrich books: ${error.message}`
             );
@@ -140,9 +151,11 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['POST_BOOK']})
   @post('/books')
   async postBooks(@requestBody() bookData: any): Promise<any> {
-    try {
+    try {      
       validateBookPost(bookData);
 
       const author = await this.getAuthorByName(bookData.authorName);
@@ -169,6 +182,8 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['PATCH_BOOK',]})
   @patch('/books/{id}')
   async updateBook(
     @param.path.string('id') id: string,
@@ -196,6 +211,8 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['DELETE_BOOK']})
   @del('/books/{id}')
   async deleteBook(@param.path.string('id') id: string): Promise<any> {
     try {
@@ -206,6 +223,8 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_BOOK_BY_ID']})
   @get('/books/{id}')
   async getBookById(@param.path.string('id') id: string): Promise<any> {
     try {
@@ -227,6 +246,8 @@ export class GatewayController {
   }
 
   // Category Endpoints
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_CATEGORY']})
   @get('/categories')
   async getCategories(): Promise<any> {
     try {
@@ -237,6 +258,8 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['POST_CATEGORY']})
   @post('/categories')
   async categoryPost(@requestBody() categoryData: any): Promise<any> {
     try {
@@ -249,6 +272,8 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['PATCH_BOOK']})
   @patch('/categories/{id}')
   async updateCategory(
     @param.path.string('id') id: string,
@@ -264,6 +289,8 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['DELETE_BOOK']})
   @del('/categories/{id}')
   async deleteCategory(@param.path.number('id') id: number): Promise<any> {
     try {
@@ -274,6 +301,8 @@ export class GatewayController {
     }
   }
 
+  @authenticate(STRATEGY.BEARER)
+  @authorize({permissions: ['GET_CATEGORY_BY_ID']})
   @get('/categories/{id}')
   async getCategoryById(@param.path.string('id') id: string): Promise<any> {
     try {
@@ -286,4 +315,5 @@ export class GatewayController {
       throw new HttpErrors.InternalServerError(`Failed to retrieve category: ${error.message}`);
     }
   }
+
 }
