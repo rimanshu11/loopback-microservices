@@ -1,30 +1,34 @@
-export class Validation {
+import { HttpErrors } from '@loopback/rest';
 
-    static verifySignupData(signupData: any):any{
-      if(signupData.password <= 8){
-        return `Password must be 8`
-      }
-      if(signupData.email){
-        this.validateEmail(signupData.email)
-      }
-      if(!signupData.allowedRoles){
-        return 'It Required'
-      }
-      
+interface IUser {
+  email?: string;
+  username?: string;
+  password?: string;
+  role?: string;
+}
+export class Validation {
+  static allowedRoles = ['User', 'Admin', 'Librarian'];
+
+  static verifySignupData(signupData: IUser): void {
+    if (!signupData.email || !this.validateEmail(signupData.email)) {
+      throw new HttpErrors.UnprocessableEntity('Invalid email format');
     }
-    static validateEmail(email: string): boolean {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
+
+    if (!signupData.password || signupData.password.length < 8) {
+      throw new HttpErrors.UnprocessableEntity('Password must be at least 8 characters long');
     }
-  
-    static validatePassword(password: string): boolean {
-      return password.length >= 8; 
-    }
-  
-    static allowedRoles = ['User', 'Admin', 'Librarian'];
-  
-    static validateRole(role: string): boolean {
-      return this.allowedRoles.includes(role);
+
+    if (!signupData.role || !this.allowedRoles.includes(signupData.role)) {
+      throw new HttpErrors.UnprocessableEntity('Invalid or missing role');
     }
   }
-  
+
+  static validateEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  static validatePassword(password: string): boolean {
+    return typeof password === 'string' && password.length >= 8;
+  }
+}

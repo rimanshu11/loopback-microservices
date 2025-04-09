@@ -1,19 +1,29 @@
 import {Provider} from '@loopback/context';
 import {verify} from 'jsonwebtoken';
 import {VerifyFunction} from 'loopback4-authentication';
-// import {User} from '../models/user.model';
+
+interface IAuthUser {
+  email: string;
+  username: string;
+  role: 'Admin' | 'User' | 'Other'; 
+  permissions: string[]; 
+  iat: number;
+}
 
 export class BearerTokenVerifyProvider
   implements Provider<VerifyFunction.BearerFn>
 {
-  constructor(  ) {}
+  constructor() {}
 
   value(): VerifyFunction.BearerFn {    
     return async token => {        
-      const user = verify(token, process.env.JWT_SECRET as string) as any;      
-      console.log("User:",user);
-      
-      return user;
+      try {
+        const user = verify(token, process.env.JWT_SECRET as string) as IAuthUser;
+        return user;
+      } catch (error) {
+        console.error("Error verifying token:", error);
+        throw new Error("Invalid token");
+      }
     };
   }
 }

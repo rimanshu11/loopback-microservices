@@ -6,7 +6,7 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
-import {TokenServiceBindings, JWTService} from '@loopback/authentication-jwt';
+import {TokenServiceBindings} from '@loopback/authentication-jwt';
 import {AuthorizationBindings, AuthorizationComponent} from 'loopback4-authorization';
 import {AuthorizationBindings as CustomAuthBindings} from './keys/authorization.keys'; 
 import { CustomJWTService } from './services/jwt.service';
@@ -44,7 +44,7 @@ export class BmsApplication extends BootMixin(
 
     this.component(AuthenticationComponent)
     this.bind(AuthorizationBindings.CONFIG).to({
-      allowAlwaysPaths: ['/explorer', '/signup', '/login'],
+      allowAlwaysPaths: ['/explorer', '/signup', '/login', '/ping'],
     });
     this.component(AuthorizationComponent);
   
