@@ -1,2 +1,2 @@
 export * from './ping.controller';
-export * from './bms.controller';
+export * from './auth.controller';

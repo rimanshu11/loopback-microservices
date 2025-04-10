@@ -1,7 +1,40 @@
 import {HttpErrors} from '@loopback/rest';
 
+interface AuthorData {
+  authorName: string;
+}
+
+interface AuthorPatchData {
+  authorName?: string;
+}
+
+interface BookData {
+  title?: string;
+  isbn?: string;
+  price?: number;
+  authorName?: string;
+  publicationDate?: string,
+  categoryName?: string;
+}
+
+interface BookPatchData {
+  title?: string;
+  isbn?: string;
+  price: number;
+  authorName?: string;
+  categoryName?: string;
+}
+
+interface CategoryData {
+  categoryName: string;
+}
+
+interface CategoryPatchData {
+  categoryName?: string;
+}
+
 // Author Validation
-export const validateAuthorPost = (data: any) => {
+export const validateAuthorPost = (data: AuthorData): void => {
   if (!data || typeof data !== 'object') {
     throw new HttpErrors.BadRequest('Request body must be an object');
   }
@@ -10,7 +43,7 @@ export const validateAuthorPost = (data: any) => {
   }
 };
 
-export const validateAuthorPatch = (data: any) => {
+export const validateAuthorPatch = (data: Partial<AuthorPatchData>): void => {
   if (!data || typeof data !== 'object') {
     throw new HttpErrors.BadRequest('Request body must be an object');
   }
@@ -20,15 +53,20 @@ export const validateAuthorPatch = (data: any) => {
 };
 
 // Book Validation
-export const validateBookPost = (data: any) => {
+export const validateBookPost = (data: BookData): void => {  
+  console.log("Data in validaate",data);
+  
   if (!data || typeof data !== 'object') {
     throw new HttpErrors.BadRequest('Request body must be an object');
   }
   if (!data.title || typeof data.title !== 'string') {
     throw new HttpErrors.BadRequest('Title is required and must be a string');
   }
+  if (!data.publicationDate || typeof data.publicationDate !== 'string') {
+    throw new HttpErrors.BadRequest('Publication Date is required and must be a string');
+  }
   if (!data.isbn || typeof data.isbn !== 'string') {
-    throw new HttpErrors.BadRequest('ISBN is required and atleast 13');
+    throw new HttpErrors.BadRequest('ISBN is required and at least 13');
   }
   if (!data.price || typeof data.price !== 'number') {
     throw new HttpErrors.BadRequest('Price is required');
@@ -41,33 +79,46 @@ export const validateBookPost = (data: any) => {
   }
 };
 
-export const validateBookPatch = (data: any) => {
+export const validateBookPatch = (data: Partial<BookPatchData>): void => {
   if (!data || typeof data !== 'object') {
     throw new HttpErrors.BadRequest('Request body must be an object');
   }
   if (data.title && typeof data.title !== 'string') {
     throw new HttpErrors.BadRequest('Title must be a string');
   }
-  if (!data.price || typeof data.price !== 'number') {
-    throw new HttpErrors.BadRequest('ISBN is required and atleast 13');
+  if (data.isbn && typeof data.isbn !== 'string') {
+    throw new HttpErrors.BadRequest('ISBN must be a string');
+  }
+  if (data.price && typeof data.price !== 'number') {
+    throw new HttpErrors.BadRequest('Price must be a number');
+  }
+  if (data.authorName && typeof data.authorName !== 'string') {
+    throw new HttpErrors.BadRequest('Author name must be a string');
+  }
+  if (data.categoryName && typeof data.categoryName !== 'string') {
+    throw new HttpErrors.BadRequest('Category name must be a string');
   }
 };
 
 // Category Validation
-export const validateCategoryPost = (data: any) => {
+export const validateCategoryPost = (data: CategoryData): void => {
   if (!data || typeof data !== 'object') {
     throw new HttpErrors.BadRequest('Request body must be an object');
   }
-  if (!data.genre || typeof data.genre !== 'string') {
+  console.log("Data:", data);
+  
+  if (!data.categoryName || typeof data.categoryName !== 'string') {
     throw new HttpErrors.BadRequest('Genre is required and must be a string');
   }
 };
 
-export const validateCategoryPatch = (data: any) => {
+export const validateCategoryPatch = (data: Partial<CategoryPatchData>): void => {
   if (!data || typeof data !== 'object') {
     throw new HttpErrors.BadRequest('Request body must be an object');
   }
-  if (data.genre && typeof data.genre !== 'string') {
+  if (data.categoryName && typeof data.categoryName !== 'string') {
     throw new HttpErrors.BadRequest('Name must be a string');
   }
 };
+
+export { AuthorData, AuthorPatchData, BookData, BookPatchData, CategoryData, CategoryPatchData };

@@ -1,8 +1,10 @@
+import 'newrelic';
 import {ApplicationConfig, BmsApplication} from './application';
 import {GatewayController} from './controllers/gateway.controller';
+
 export * from './application';
 
-export async function main(options: ApplicationConfig = {}) {
+export async function main(options: ApplicationConfig = {}) {  
   const app = new BmsApplication(options);
   await app.boot();
 
@@ -23,7 +25,7 @@ if (require.main === module) {
   const config = {
     rest: {
       port: +(process.env.PORT ?? 3000),
-      host: process.env.HOST || '127.0.0.1',
+      host: process.env.HOST ?? '127.0.0.1',
       gracePeriodForClose: 5000, // 5 seconds
       openApiSpec: {
         setServersFromRequest: true,

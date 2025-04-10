@@ -1,0 +1,58 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout BMS API Gateway (E2E runner)
+        uses: actions/checkout@v3
+
+      - name: Clone Microservices
+        run: |
+          git clone https://github.com/rimanshu11/loopback-microservices
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd AuthorService && npm ci && cd ..
+          cd BookService && npm ci && cd ..
+          cd CategoryService && npm ci && cd ..
+          cd AuthService && npm ci && cd ..
+
+      - name: Start all services
+        run: |
+          nohup npm start > gateway.log 2>&1 &
+          nohup cd AuthorService && npm start > ../author.log 2>&1 &
+          nohup cd BookService && npm start > ../book.log 2>&1 &
+          nohup cd CategoryService && npm start > ../category.log 2>&1 &
+          nohup cd AuthService && npm start > ../auth.log 2>&1 &
+          sleep 25  # wait for services to boot up
+
+      - name: Run E2E Tests
+        run: npx mocha -r ts-node/register test/e2e/**/*.test.ts
+
+      - name: Show logs if tests fail
+        if: failure()
+        run: |
+          echo "=== Gateway Logs ==="
+          cat gateway.log || true
+          echo "=== Author Logs ==="
+          cat author.log || true
+          echo "=== Book Logs ==="
+          cat book.log || true
+          echo "=== Category Logs ==="
+          cat category.log || true
+          echo "=== Auth Logs ==="
+          cat auth.log || true
