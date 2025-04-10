@@ -13,6 +13,7 @@ interface BookData {
   isbn?: string;
   price?: number;
   authorName?: string;
+  publicationDate?: string,
   categoryName?: string;
 }
 
@@ -53,11 +54,16 @@ export const validateAuthorPatch = (data: Partial<AuthorPatchData>): void => {
 
 // Book Validation
 export const validateBookPost = (data: BookData): void => {  
+  console.log("Data in validaate",data);
+  
   if (!data || typeof data !== 'object') {
     throw new HttpErrors.BadRequest('Request body must be an object');
   }
   if (!data.title || typeof data.title !== 'string') {
     throw new HttpErrors.BadRequest('Title is required and must be a string');
+  }
+  if (!data.publicationDate || typeof data.publicationDate !== 'string') {
+    throw new HttpErrors.BadRequest('Publication Date is required and must be a string');
   }
   if (!data.isbn || typeof data.isbn !== 'string') {
     throw new HttpErrors.BadRequest('ISBN is required and at least 13');

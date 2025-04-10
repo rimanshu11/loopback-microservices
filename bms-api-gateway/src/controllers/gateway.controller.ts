@@ -220,8 +220,8 @@ export class GatewayController {
   @post('/books')
   async postBooks(@requestBody() bookData: BookDetails): Promise<BookDetails> {
     try {
-      validateBookPost(bookData);
-      
+      // validateBookPost(bookData);
+      console.log("bookData from controller:",bookData);
       const author = await this.getAuthorByName(bookData.authorName!);
       const authorId = author?.authorId;
 
@@ -362,7 +362,7 @@ export class GatewayController {
     @requestBody() categoryData: CategoryData,
   ): Promise<CategoryData> {
     try {
-      // validateCategoryPost(categoryData);
+      // validateCategoryPost(categoryData);      
       const response = await axios.post(
         `${process.env.BASE_URL_CATEGORIES}`,
         categoryData,

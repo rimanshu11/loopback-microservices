@@ -1,5 +1,6 @@
 import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
+require('dotenv').config();
 
 const config = {
   name: 'user',
@@ -7,9 +8,9 @@ const config = {
   url: '',
   host: 'localhost',
   port: 3306,
-  user: 'rimanshu',
-  password: 'Rimanshu@2025',
-  database: 'user'
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE
 };
 
 // Observe application's life cycle to disconnect the datasource when

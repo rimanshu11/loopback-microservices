@@ -14,7 +14,7 @@ describe('GatewayController Integration Tests', () => {
   let client: any;
   let consoleErrorStub: sinon.SinonStub;
 
-  const mockToken = 'your mocked token'; // Mock bearer token
+  const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InIuY29tIiwicm9sZSI6IkFkbWluIiwicGVybWlzc2lvbnMiOlsiR0VUX0FVVEhPUiIsIlBPU1RfQVVUSE9SIiwiUEFUQ0hfQVVUSE9SIiwiREVMRVRFX0FVVEhPUiIsIkdFVF9BVVRIT1JfQllfSUQiLCJHRVRfQk9PSyIsIlBPU1RfQk9PSyIsIlBBVENIX0JPT0siLCJERUxFVEVfQk9PSyIsIkdFVF9CT09LX0JZX0lEIiwiR0VUX0NBVEVHT1JZIiwiUE9TVF9DQVRFR09SWSIsIlBBVENIX0NBVEVHT1JZIiwiREVMRVRFX0NBVEVHT1JZIiwiR0VUX0NBVEVHT1JZX0JZX0lEIl0sImlhdCI6MTc0NDE4MTQ0NH0.ql0D6hIwvTj3PdNkmtIA1pJaeSIBivsPrgEEQOcR0Kw'; // Mock bearer token
   const baseUrlAuthors = 'http://localhost:3001';
   const baseUrlBooks = 'http://localhost:3002';
   const baseUrlCategories = 'http://localhost:3003';
@@ -179,9 +179,7 @@ describe('GatewayController Integration Tests', () => {
           author: mockAuthor,
           category: mockCategory,
         });
-      });
-
-      it('should return 404 if author not found', async () => {
+      });      it('should return 404 if author not found', async () => {
         const mockBookInput = {title: 'New Book', authorName: 'Unknown'};
         nock(baseUrlAuthors).get('/authors').reply(200, []);
 

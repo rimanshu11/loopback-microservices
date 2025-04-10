@@ -62,6 +62,8 @@
     "@sourceloop/authentication-service": "^2.0.0",
     "@sourceloop/cli": "^9.2.3",
     "@types/chai-as-promised": "^8.0.2",
+    "@types/dotenv": "^6.1.1",
+    "dotenv": "^16.4.7",
     "loopback-connector-mysql": "^7.1.0",
     "loopback4-authentication": "^12.2.0",
     "loopback4-authorization": "^7.0.3",
